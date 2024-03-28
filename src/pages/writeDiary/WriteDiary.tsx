@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import * as S from "./WriteDiary.styles";
-import { UserChatBubble, BotChatBubble } from "@components/ChatBubble/ChatBubble";
+import { BotChatBubble } from "@components/ChatBubble/ChatBubble";
 import BaseBottomSheetContent from "@components/BaseBottomSheetContent/BaseBottomSheetContent";
 import BottomSheet from "@components/BottomSheet/BottomSheet";
 import ImagePagination from "@components/ImagePagination/ImagePagination";
@@ -51,12 +51,12 @@ const WriteDiary = () => {
         <BottomSheet isVisible={isVisible} setIsVisible={setIsVisible}>
           <BaseBottomSheetContent />
         </BottomSheet>
-        {isImageVisible === true && images ? (
+        {images ? (
           <>
             <BotChatBubble text="이 사진에 어떤 추억이 있는지 알려주세요~!"></BotChatBubble>
             <BotChatBubble text={T.recommend} num={2}></BotChatBubble>
             <S.PaginationWrapper>
-              <ImagePagination images={images} isLogin={false} />
+              <ImagePagination images={images as string[]} isLogin={false} />
               <S.TalkStartButton
                 onClick={handleStartRecord}
                 onTouchStart={handleTouchStart}
@@ -69,7 +69,6 @@ const WriteDiary = () => {
           </>
         ) : null}
         <EmotionChoice />
-        <UserChatBubble text="유저말풍선 호출코드 작성 시 지우기"></UserChatBubble>
       </S.ChatWrapper>
       {isRecording && <div style={{ height: "500px" }}></div>}
       <BottomSheet isVisible={isRecording} setIsVisible={setIsRecording}>

@@ -80,9 +80,9 @@ export const CategoryWrapper = styled.div`
   justify-content: center;
   align-items: flex-start;
 
-  width: 120%;
+  width: 105%;
 
-  margin-left: 20%;
+  margin-left: 5%;
   margin-bottom: 16px;
 `;
 

@@ -16,10 +16,13 @@ import { diaryState } from "@stores/diaryStore";
 import { useRecoilState } from "recoil";
 import Header from "@components/HeaderNav/HeaderNav";
 import Spinner from "@components/Spinner/Spinner";
+import useDiaryDetail from "@hooks/useDiaryDetail";
 
 const DiaryDetail = () => {
   const [searchParams] = useSearchParams();
   const from = searchParams.get("from");
+  const diaryId = Number(searchParams.get("diaryId"));
+  const { data: diaryDetailData } = diaryId && (useDiaryDetail(diaryId) as any);
 
   const [diary] = useRecoilState(diaryState);
 
@@ -29,6 +32,7 @@ const DiaryDetail = () => {
   const [isOn, setIsOn] = useState(false);
   const [isLike, setIsLike] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [images, setImages] = useState<string[]>([]);
 
   const ModalProps = {
     title: isVisible ? "함깨보기에 내 일기를\n공유할까요?" : "내 일기 공유를\n그만둘거냐는 질문",
@@ -37,15 +41,28 @@ const DiaryDetail = () => {
     isCancelTextExist: true
   };
 
-  const diaryData = JSON.parse(localStorage.getItem("diary") || "{}");
-
-  const images = diaryData.images.map((image: ImagesType) => image.convertImageUrl);
+  const diaryData = diaryDetailData
+    ? diaryDetailData
+    : JSON.parse(localStorage.getItem("diary") as string);
 
   useEffect(() => {
     if (isSuccess) {
       setIsLoading(false);
     }
   }, [isSuccess]);
+
+  useEffect(() => {
+    if (diaryDetailData) {
+      localStorage.setItem("diary", JSON.stringify(diaryDetailData));
+
+      setImages(
+        Array.isArray(diaryDetailData.images) &&
+          diaryDetailData.imageResDtoList.map((image: ImagesType) => {
+            image.convertImageUrl;
+          })
+      );
+    }
+  }, [diaryDetailData]);
 
   return (
     <>
